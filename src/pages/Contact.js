@@ -70,10 +70,10 @@ function Contact() {
           <div className="social-links">
             <h3>소셜 미디어</h3>
             <div className="social-icons">
-              <a href="#" className="social-icon">Facebook</a>
-              <a href="#" className="social-icon">Twitter</a>
-              <a href="#" className="social-icon">Instagram</a>
-              <a href="#" className="social-icon">LinkedIn</a>
+              <a href="https://facebook.com" className="social-icon" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href="https://twitter.com" className="social-icon" target="_blank" rel="noopener noreferrer">Twitter</a>
+              <a href="https://instagram.com" className="social-icon" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://linkedin.com" className="social-icon" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             </div>
           </div>
         </div>
