@@ -45,6 +45,21 @@ function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
+            <Link to="/portfolio" className="nav-link" onClick={closeMenu}>
+              포트폴리오
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/blog" className="nav-link" onClick={closeMenu}>
+              블로그
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/pricing" className="nav-link" onClick={closeMenu}>
+              요금제
+            </Link>
+          </li>
+          <li className="nav-item">
             <Link to="/contact" className="nav-link" onClick={closeMenu}>
               문의하기
             </Link>
