@@ -19,6 +19,11 @@ import Leaderboard from './pages/Leaderboard';
 import Studio from './pages/Studio';
 import Chat from './pages/Chat';
 import Courses from './pages/Courses';
+import Profile from './pages/Profile';
+import Notifications from './pages/Notifications';
+import Settings from './pages/Settings';
+import Search from './pages/Search';
+import Projects from './pages/Projects';
 import './App.css';
 
 function App() {
@@ -44,6 +49,11 @@ function App() {
           <Route path="/studio" element={<Studio />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/courses" element={<Courses />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/projects" element={<Projects />} />
         </Routes>
         <Footer />
       </div>

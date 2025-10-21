@@ -114,6 +114,31 @@ function Navbar() {
               강의
             </Link>
           </li>
+          <li className="nav-item">
+            <Link to="/profile" className="nav-link" onClick={closeMenu}>
+              프로필
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/projects" className="nav-link" onClick={closeMenu}>
+              프로젝트
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/search" className="nav-link" onClick={closeMenu}>
+              검색
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/notifications" className="nav-link" onClick={closeMenu}>
+              알림
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/settings" className="nav-link" onClick={closeMenu}>
+              설정
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
