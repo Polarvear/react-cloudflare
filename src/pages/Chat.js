@@ -159,14 +159,14 @@ function Chat() {
         <div className="details-section">
           <h4>🔗 공유 링크</h4>
           <div className="shared-links">
-            <a href="#" className="link-item">
+            <button className="link-item">
               <span className="link-icon">🌐</span>
               <span className="link-text">GitHub Repository</span>
-            </a>
-            <a href="#" className="link-item">
+            </button>
+            <button className="link-item">
               <span className="link-icon">📚</span>
               <span className="link-text">Documentation</span>
-            </a>
+            </button>
           </div>
         </div>
 

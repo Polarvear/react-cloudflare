@@ -26,7 +26,9 @@ function Playground() {
       setCalcDisplay('0');
     } else if (value === '=') {
       try {
-        setCalcDisplay(eval(calcDisplay).toString());
+        // eslint-disable-next-line no-new-func
+        const result = Function('"use strict"; return (' + calcDisplay + ')')();
+        setCalcDisplay(result.toString());
       } catch {
         setCalcDisplay('Error');
       }

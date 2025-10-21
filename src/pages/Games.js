@@ -21,11 +21,7 @@ function Games() {
   const [wpm, setWpm] = useState(0);
   
   // Snake Game State
-  const [snake, setSnake] = useState([[5, 5]]);
-  const [food, setFood] = useState([10, 10]);
-  const [direction, setDirection] = useState('RIGHT');
-  const [gameOver, setGameOver] = useState(false);
-  const [snakeScore, setSnakeScore] = useState(0);
+  const [snakeScore] = useState(0);
 
   const quizQuestions = [
     {

@@ -53,7 +53,7 @@ function Home() {
     }, 5000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [testimonials.length]);
 
   const testimonials = [
     {
@@ -177,7 +177,7 @@ function Home() {
             </div>
             <h3>초고속 성능</h3>
             <p>최적화된 React 기반으로 빠르고 반응성 있는 사용자 경험을 제공합니다</p>
-            <a href="#" className="feature-link">자세히 보기 →</a>
+            <button className="feature-link">자세히 보기 →</button>
           </div>
           <div className="feature-card">
             <div className="feature-icon-wrapper">
@@ -185,7 +185,7 @@ function Home() {
             </div>
             <h3>모던한 디자인</h3>
             <p>직관적이고 세련된 UI/UX 디자인으로 사용하기 편리합니다</p>
-            <a href="#" className="feature-link">자세히 보기 →</a>
+            <button className="feature-link">자세히 보기 →</button>
           </div>
           <div className="feature-card">
             <div className="feature-icon-wrapper">
@@ -193,7 +193,7 @@ function Home() {
             </div>
             <h3>안전한 보안</h3>
             <p>최신 보안 기술을 적용하여 데이터를 안전하게 보호합니다</p>
-            <a href="#" className="feature-link">자세히 보기 →</a>
+            <button className="feature-link">자세히 보기 →</button>
           </div>
           <div className="feature-card">
             <div className="feature-icon-wrapper">
@@ -201,7 +201,7 @@ function Home() {
             </div>
             <h3>반응형 지원</h3>
             <p>모바일, 태블릿, 데스크톱 모든 기기에서 완벽하게 작동합니다</p>
-            <a href="#" className="feature-link">자세히 보기 →</a>
+            <button className="feature-link">자세히 보기 →</button>
           </div>
           <div className="feature-card">
             <div className="feature-icon-wrapper">
@@ -209,7 +209,7 @@ function Home() {
             </div>
             <h3>팀 협업</h3>
             <p>실시간 협업 도구로 팀 생산성을 극대화하세요</p>
-            <a href="#" className="feature-link">자세히 보기 →</a>
+            <button className="feature-link">자세히 보기 →</button>
           </div>
           <div className="feature-card">
             <div className="feature-icon-wrapper">
@@ -217,7 +217,7 @@ function Home() {
             </div>
             <h3>상세한 분석</h3>
             <p>강력한 분석 도구로 데이터 기반 의사결정을 내리세요</p>
-            <a href="#" className="feature-link">자세히 보기 →</a>
+            <button className="feature-link">자세히 보기 →</button>
           </div>
         </div>
       </section>

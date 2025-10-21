@@ -4,7 +4,7 @@ import './Dashboard.css';
 function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [chartData, setChartData] = useState([]);
-  const [notifications, setNotifications] = useState([
+  const [notifications] = useState([
     { id: 1, type: 'success', message: '새로운 프로젝트가 시작되었습니다!', time: '5분 전' },
     { id: 2, type: 'info', message: '시스템 업데이트가 예정되어 있습니다', time: '1시간 전' },
     { id: 3, type: 'warning', message: '결제 정보를 확인해주세요', time: '2시간 전' }
