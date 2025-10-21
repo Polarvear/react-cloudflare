@@ -14,6 +14,11 @@ import Community from './pages/Community';
 import Resources from './pages/Resources';
 import Playground from './pages/Playground';
 import Events from './pages/Events';
+import Games from './pages/Games';
+import Leaderboard from './pages/Leaderboard';
+import Studio from './pages/Studio';
+import Chat from './pages/Chat';
+import Courses from './pages/Courses';
 import './App.css';
 
 function App() {
@@ -34,6 +39,11 @@ function App() {
           <Route path="/resources" element={<Resources />} />
           <Route path="/playground" element={<Playground />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/games" element={<Games />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/studio" element={<Studio />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/courses" element={<Courses />} />
         </Routes>
         <Footer />
       </div>

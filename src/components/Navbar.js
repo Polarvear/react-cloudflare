@@ -89,6 +89,31 @@ function Navbar() {
               이벤트
             </Link>
           </li>
+          <li className="nav-item">
+            <Link to="/games" className="nav-link" onClick={closeMenu}>
+              게임
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/leaderboard" className="nav-link" onClick={closeMenu}>
+              리더보드
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/studio" className="nav-link" onClick={closeMenu}>
+              스튜디오
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/chat" className="nav-link" onClick={closeMenu}>
+              채팅
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/courses" className="nav-link" onClick={closeMenu}>
+              강의
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
