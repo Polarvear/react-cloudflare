@@ -12,6 +12,37 @@ function Home() {
   const [chatOpen, setChatOpen] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
+  const testimonials = [
+    {
+      name: '김민수',
+      role: 'CEO, 테크스타트업',
+      image: '👨‍💼',
+      text: '이 플랫폼 덕분에 우리 비즈니스가 3배 성장했습니다. 정말 놀라운 도구입니다!',
+      rating: 5
+    },
+    {
+      name: '이지은',
+      role: '프리랜서 디자이너',
+      image: '👩‍🎨',
+      text: '사용하기 쉽고 강력한 기능들이 가득합니다. 모든 프로젝트에 사용하고 있어요.',
+      rating: 5
+    },
+    {
+      name: '박준호',
+      role: '마케팅 매니저',
+      image: '👨‍💻',
+      text: '고객 관리가 이렇게 쉬울 줄 몰랐습니다. 팀 전체가 만족하고 있습니다.',
+      rating: 5
+    },
+    {
+      name: '최서연',
+      role: '스타트업 창업자',
+      image: '👩‍💼',
+      text: '비용 대비 최고의 가치를 제공합니다. 강력 추천합니다!',
+      rating: 5
+    }
+  ];
+
   // Animated counter effect
   useEffect(() => {
     const targets = {
@@ -54,37 +85,6 @@ function Home() {
 
     return () => clearInterval(timer);
   }, [testimonials.length]);
-
-  const testimonials = [
-    {
-      name: '김민수',
-      role: 'CEO, 테크스타트업',
-      image: '👨‍💼',
-      text: '이 플랫폼 덕분에 우리 비즈니스가 3배 성장했습니다. 정말 놀라운 도구입니다!',
-      rating: 5
-    },
-    {
-      name: '이지은',
-      role: '프리랜서 디자이너',
-      image: '👩‍🎨',
-      text: '사용하기 쉽고 강력한 기능들이 가득합니다. 모든 프로젝트에 사용하고 있어요.',
-      rating: 5
-    },
-    {
-      name: '박준호',
-      role: '마케팅 매니저',
-      image: '👨‍💻',
-      text: '고객 관리가 이렇게 쉬울 줄 몰랐습니다. 팀 전체가 만족하고 있습니다.',
-      rating: 5
-    },
-    {
-      name: '최서연',
-      role: '스타트업 창업자',
-      image: '👩‍💼',
-      text: '비용 대비 최고의 가치를 제공합니다. 강력 추천합니다!',
-      rating: 5
-    }
-  ];
 
   return (
     <div className="home">

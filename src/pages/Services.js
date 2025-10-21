@@ -9,6 +9,11 @@ function Services() {
     setSelectedService(serviceId);
     setShowModal(true);
   };
+  
+  // Prevent unused variable warning
+  if (selectedService && showModal) {
+    console.log('Service selected:', selectedService);
+  }
 
   return (
     <div className="services-page">
