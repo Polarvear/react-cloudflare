@@ -64,6 +64,31 @@ function Navbar() {
               문의하기
             </Link>
           </li>
+          <li className="nav-item">
+            <Link to="/dashboard" className="nav-link" onClick={closeMenu}>
+              대시보드
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/community" className="nav-link" onClick={closeMenu}>
+              커뮤니티
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/resources" className="nav-link" onClick={closeMenu}>
+              리소스
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/playground" className="nav-link" onClick={closeMenu}>
+              플레이그라운드
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/events" className="nav-link" onClick={closeMenu}>
+              이벤트
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

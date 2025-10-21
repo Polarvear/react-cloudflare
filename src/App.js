@@ -9,6 +9,11 @@ import Portfolio from './pages/Portfolio';
 import Blog from './pages/Blog';
 import Pricing from './pages/Pricing';
 import Contact from './pages/Contact';
+import Dashboard from './pages/Dashboard';
+import Community from './pages/Community';
+import Resources from './pages/Resources';
+import Playground from './pages/Playground';
+import Events from './pages/Events';
 import './App.css';
 
 function App() {
@@ -24,6 +29,11 @@ function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/playground" element={<Playground />} />
+          <Route path="/events" element={<Events />} />
         </Routes>
         <Footer />
       </div>
