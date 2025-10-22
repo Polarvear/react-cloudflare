@@ -23,6 +23,21 @@ function Playground() {
     wind: 12,
     feelsLike: 20
   });
+  const [editorCode, setEditorCode] = useState('console.log("Hello, World!");');
+  const [editorOutput, setEditorOutput] = useState('');
+  const [kanbanTasks, setKanbanTasks] = useState({
+    todo: [
+      { id: 1, text: 'UI 디자인 완성하기', priority: 'high' },
+      { id: 2, text: 'API 문서 작성', priority: 'medium' }
+    ],
+    inProgress: [
+      { id: 3, text: '로그인 기능 구현', priority: 'high' }
+    ],
+    done: [
+      { id: 4, text: '프로젝트 초기 설정', priority: 'low' }
+    ]
+  });
+  const [newTaskText, setNewTaskText] = useState('');
 
   const demos = [
     { id: 'calculator', name: '계산기', icon: '🔢', description: '간단한 계산기 앱' },
@@ -30,7 +45,9 @@ function Playground() {
     { id: 'color', name: '컬러 픽커', icon: '🎨', description: '색상 선택 도구' },
     { id: 'slider', name: '슬라이더', icon: '🎚️', description: '인터랙티브 슬라이더' },
     { id: 'timer', name: '타이머', icon: '⏱️', description: '카운트다운 타이머' },
-    { id: 'weather', name: '날씨 위젯', icon: '🌤️', description: '날씨 정보 표시' }
+    { id: 'weather', name: '날씨 위젯', icon: '🌤️', description: '날씨 정보 표시' },
+    { id: 'editor', name: '코드 에디터', icon: '💻', description: '실시간 코드 실행' },
+    { id: 'kanban', name: '칸반 보드', icon: '📋', description: '드래그 앤 드롭' }
   ];
 
   const handleCalcClick = (value) => {
@@ -131,6 +148,65 @@ function Playground() {
       '안개': '🌫️'
     };
     return icons[condition] || '🌤️';
+  };
+
+  // Code Editor functions
+  const runCode = () => {
+    try {
+      const logs = [];
+      const customConsole = {
+        log: (...args) => logs.push(args.join(' ')),
+        error: (...args) => logs.push('Error: ' + args.join(' ')),
+        warn: (...args) => logs.push('Warning: ' + args.join(' '))
+      };
+      
+      // eslint-disable-next-line no-new-func
+      const func = new Function('console', editorCode);
+      func(customConsole);
+      
+      setEditorOutput(logs.join('\n') || '실행 완료 (출력 없음)');
+    } catch (error) {
+      setEditorOutput(`Error: ${error.message}`);
+    }
+  };
+
+  const clearEditor = () => {
+    setEditorCode('');
+    setEditorOutput('');
+  };
+
+  // Kanban Board functions
+  const addTask = (column) => {
+    if (newTaskText.trim()) {
+      const newTask = {
+        id: Date.now(),
+        text: newTaskText,
+        priority: 'medium'
+      };
+      setKanbanTasks({
+        ...kanbanTasks,
+        [column]: [...kanbanTasks[column], newTask]
+      });
+      setNewTaskText('');
+    }
+  };
+
+  const moveTask = (taskId, fromColumn, toColumn) => {
+    const task = kanbanTasks[fromColumn].find(t => t.id === taskId);
+    if (task) {
+      setKanbanTasks({
+        ...kanbanTasks,
+        [fromColumn]: kanbanTasks[fromColumn].filter(t => t.id !== taskId),
+        [toColumn]: [...kanbanTasks[toColumn], task]
+      });
+    }
+  };
+
+  const deleteTask = (taskId, column) => {
+    setKanbanTasks({
+      ...kanbanTasks,
+      [column]: kanbanTasks[column].filter(t => t.id !== taskId)
+    });
   };
 
   return (
@@ -471,6 +547,160 @@ useEffect(() => {
   }
   return () => clearInterval(interval);
 }, [running, minutes, seconds]);`}</pre>
+              </div>
+            </div>
+          )}
+
+          {activeDemo === 'editor' && (
+            <div className="demo-container">
+              <div className="demo-header">
+                <h2>💻 코드 에디터</h2>
+                <p>JavaScript 코드를 작성하고 실행해보세요</p>
+              </div>
+              <div className="editor-demo">
+                <div className="editor-container">
+                  <div className="editor-header">
+                    <span>📝 editor.js</span>
+                    <div className="editor-actions">
+                      <button onClick={runCode} className="btn-run">▶️ 실행</button>
+                      <button onClick={clearEditor} className="btn-clear">🗑️ 초기화</button>
+                    </div>
+                  </div>
+                  <textarea
+                    className="code-editor"
+                    value={editorCode}
+                    onChange={(e) => setEditorCode(e.target.value)}
+                    placeholder="여기에 JavaScript 코드를 입력하세요..."
+                    spellCheck={false}
+                  />
+                </div>
+                <div className="output-container">
+                  <div className="output-header">📤 출력</div>
+                  <pre className="code-output">{editorOutput || '코드를 실행하면 여기에 결과가 표시됩니다.'}</pre>
+                </div>
+                <div className="editor-examples">
+                  <h4>예제 코드</h4>
+                  <div className="example-buttons">
+                    <button onClick={() => setEditorCode('console.log("Hello, World!");')}>Hello World</button>
+                    <button onClick={() => setEditorCode('for(let i = 1; i <= 5; i++) {\n  console.log("Count: " + i);\n}')}>반복문</button>
+                    <button onClick={() => setEditorCode('const arr = [1, 2, 3, 4, 5];\nconst doubled = arr.map(x => x * 2);\nconsole.log(doubled);')}>배열 메서드</button>
+                    <button onClick={() => setEditorCode('function fibonacci(n) {\n  if (n <= 1) return n;\n  return fibonacci(n-1) + fibonacci(n-2);\n}\nconsole.log(fibonacci(10));')}>재귀 함수</button>
+                  </div>
+                </div>
+              </div>
+              <div className="demo-code">
+                <h4>💻 코드 예제</h4>
+                <pre>{`const [code, setCode] = useState('');
+const [output, setOutput] = useState('');
+
+const runCode = () => {
+  try {
+    const logs = [];
+    const customConsole = {
+      log: (...args) => logs.push(args.join(' '))
+    };
+    const func = new Function('console', code);
+    func(customConsole);
+    setOutput(logs.join('\\n'));
+  } catch (error) {
+    setOutput(\`Error: \${error.message}\`);
+  }
+};`}</pre>
+              </div>
+            </div>
+          )}
+
+          {activeDemo === 'kanban' && (
+            <div className="demo-container">
+              <div className="demo-header">
+                <h2>📋 칸반 보드</h2>
+                <p>작업을 관리하고 진행 상황을 추적하세요</p>
+              </div>
+              <div className="kanban-demo">
+                <div className="task-input">
+                  <input
+                    type="text"
+                    value={newTaskText}
+                    onChange={(e) => setNewTaskText(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addTask('todo')}
+                    placeholder="새 작업 추가..."
+                  />
+                  <button onClick={() => addTask('todo')} className="btn-add-task">추가</button>
+                </div>
+
+                <div className="kanban-board">
+                  <div className="kanban-column">
+                    <div className="column-header todo">
+                      <h3>📝 할 일</h3>
+                      <span className="task-count">{kanbanTasks.todo.length}</span>
+                    </div>
+                    <div className="column-content">
+                      {kanbanTasks.todo.map(task => (
+                        <div key={task.id} className={`kanban-task ${task.priority}`}>
+                          <div className="task-text">{task.text}</div>
+                          <div className="task-actions">
+                            <button onClick={() => moveTask(task.id, 'todo', 'inProgress')} title="진행중으로">➡️</button>
+                            <button onClick={() => deleteTask(task.id, 'todo')} title="삭제">🗑️</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="kanban-column">
+                    <div className="column-header progress">
+                      <h3>🔄 진행중</h3>
+                      <span className="task-count">{kanbanTasks.inProgress.length}</span>
+                    </div>
+                    <div className="column-content">
+                      {kanbanTasks.inProgress.map(task => (
+                        <div key={task.id} className={`kanban-task ${task.priority}`}>
+                          <div className="task-text">{task.text}</div>
+                          <div className="task-actions">
+                            <button onClick={() => moveTask(task.id, 'inProgress', 'todo')} title="할 일로">⬅️</button>
+                            <button onClick={() => moveTask(task.id, 'inProgress', 'done')} title="완료로">➡️</button>
+                            <button onClick={() => deleteTask(task.id, 'inProgress')} title="삭제">🗑️</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="kanban-column">
+                    <div className="column-header done">
+                      <h3>✅ 완료</h3>
+                      <span className="task-count">{kanbanTasks.done.length}</span>
+                    </div>
+                    <div className="column-content">
+                      {kanbanTasks.done.map(task => (
+                        <div key={task.id} className={`kanban-task ${task.priority}`}>
+                          <div className="task-text">{task.text}</div>
+                          <div className="task-actions">
+                            <button onClick={() => moveTask(task.id, 'done', 'inProgress')} title="진행중으로">⬅️</button>
+                            <button onClick={() => deleteTask(task.id, 'done')} title="삭제">🗑️</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="demo-code">
+                <h4>💻 코드 예제</h4>
+                <pre>{`const [tasks, setTasks] = useState({
+  todo: [],
+  inProgress: [],
+  done: []
+});
+
+const moveTask = (taskId, from, to) => {
+  const task = tasks[from].find(t => t.id === taskId);
+  setTasks({
+    ...tasks,
+    [from]: tasks[from].filter(t => t.id !== taskId),
+    [to]: [...tasks[to], task]
+  });
+};`}</pre>
               </div>
             </div>
           )}

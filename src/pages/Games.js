@@ -38,6 +38,16 @@ function Games() {
   const [currentTrivia, setCurrentTrivia] = useState(0);
   const [triviaAnswers, setTriviaAnswers] = useState([]);
   const [showTriviaResult, setShowTriviaResult] = useState(false);
+  
+  // Tic-Tac-Toe State
+  const [tttBoard, setTttBoard] = useState(Array(9).fill(null));
+  const [tttIsXNext, setTttIsXNext] = useState(true);
+  const [tttWinner, setTttWinner] = useState(null);
+  
+  // 2048 Game State
+  const [board2048, setBoard2048] = useState([]);
+  const [score2048, setScore2048] = useState(0);
+  const [gameOver2048, setGameOver2048] = useState(false);
 
   const quizQuestions = [
     {
@@ -78,7 +88,9 @@ function Games() {
     { id: 'typing', name: '타이핑 게임', icon: '⌨️', description: '코드 타이핑 속도' },
     { id: 'snake', name: '스네이크 게임', icon: '🐍', description: '클래식 게임' },
     { id: 'puzzle', name: '슬라이딩 퍼즐', icon: '🧩', description: '숫자 맞추기' },
-    { id: 'trivia', name: '개발 트리비아', icon: '🎯', description: '상식 퀴즈' }
+    { id: 'trivia', name: '개발 트리비아', icon: '🎯', description: '상식 퀴즈' },
+    { id: 'tictactoe', name: '틱택토', icon: '⭕', description: 'AI와 대결' },
+    { id: 'game2048', name: '2048', icon: '🔢', description: '숫자 합치기' }
   ];
 
   const triviaQuestions = [
@@ -370,6 +382,168 @@ function Games() {
     setTriviaAnswers([]);
   };
 
+  // Tic-Tac-Toe Functions
+  const calculateWinner = (squares) => {
+    const lines = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+      [0, 4, 8], [2, 4, 6] // diagonals
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        return squares[a];
+      }
+    }
+    return null;
+  };
+
+  const handleTttClick = (index) => {
+    if (tttBoard[index] || tttWinner) return;
+    
+    const newBoard = [...tttBoard];
+    newBoard[index] = tttIsXNext ? 'X' : 'O';
+    setTttBoard(newBoard);
+    
+    const winner = calculateWinner(newBoard);
+    if (winner) {
+      setTttWinner(winner);
+    } else if (!newBoard.includes(null)) {
+      setTttWinner('Draw');
+    } else {
+      setTttIsXNext(!tttIsXNext);
+      
+      // AI move (simple random)
+      if (tttIsXNext && !winner) {
+        setTimeout(() => {
+          const emptySquares = newBoard.map((val, idx) => val === null ? idx : null).filter(val => val !== null);
+          if (emptySquares.length > 0) {
+            const aiMove = emptySquares[Math.floor(Math.random() * emptySquares.length)];
+            const aiBoard = [...newBoard];
+            aiBoard[aiMove] = 'O';
+            setTttBoard(aiBoard);
+            const aiWinner = calculateWinner(aiBoard);
+            if (aiWinner) {
+              setTttWinner(aiWinner);
+            } else if (!aiBoard.includes(null)) {
+              setTttWinner('Draw');
+            }
+          }
+        }, 500);
+      }
+    }
+  };
+
+  const resetTtt = () => {
+    setTttBoard(Array(9).fill(null));
+    setTttIsXNext(true);
+    setTttWinner(null);
+  };
+
+  // 2048 Game Functions
+  const init2048 = () => {
+    const newBoard = Array(4).fill(null).map(() => Array(4).fill(0));
+    addNewTile(newBoard);
+    addNewTile(newBoard);
+    setBoard2048(newBoard);
+    setScore2048(0);
+    setGameOver2048(false);
+  };
+
+  const addNewTile = (board) => {
+    const emptyTiles = [];
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (board[i][j] === 0) emptyTiles.push([i, j]);
+      }
+    }
+    if (emptyTiles.length > 0) {
+      const [row, col] = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
+      board[row][col] = Math.random() < 0.9 ? 2 : 4;
+    }
+  };
+
+  const move2048 = (direction) => {
+    if (gameOver2048) return;
+    
+    let newBoard = board2048.map(row => [...row]);
+    let moved = false;
+    let newScore = score2048;
+
+    const moveLeft = (board) => {
+      for (let i = 0; i < 4; i++) {
+        let row = board[i].filter(val => val !== 0);
+        for (let j = 0; j < row.length - 1; j++) {
+          if (row[j] === row[j + 1]) {
+            row[j] *= 2;
+            newScore += row[j];
+            row.splice(j + 1, 1);
+          }
+        }
+        while (row.length < 4) row.push(0);
+        if (JSON.stringify(board[i]) !== JSON.stringify(row)) moved = true;
+        board[i] = row;
+      }
+    };
+
+    const rotateBoard = (board) => {
+      return board[0].map((_, i) => board.map(row => row[i]).reverse());
+    };
+
+    if (direction === 'left') {
+      moveLeft(newBoard);
+    } else if (direction === 'right') {
+      newBoard = newBoard.map(row => row.reverse());
+      moveLeft(newBoard);
+      newBoard = newBoard.map(row => row.reverse());
+    } else if (direction === 'up') {
+      newBoard = rotateBoard(rotateBoard(rotateBoard(newBoard)));
+      moveLeft(newBoard);
+      newBoard = rotateBoard(newBoard);
+    } else if (direction === 'down') {
+      newBoard = rotateBoard(newBoard);
+      moveLeft(newBoard);
+      newBoard = rotateBoard(rotateBoard(rotateBoard(newBoard)));
+    }
+
+    if (moved) {
+      addNewTile(newBoard);
+      setBoard2048(newBoard);
+      setScore2048(newScore);
+      
+      // Check game over
+      const hasEmpty = newBoard.some(row => row.includes(0));
+      const canMerge = newBoard.some((row, i) => 
+        row.some((cell, j) => 
+          (j < 3 && cell === row[j + 1]) || (i < 3 && cell === newBoard[i + 1][j])
+        )
+      );
+      if (!hasEmpty && !canMerge) {
+        setGameOver2048(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (activeGame === 'game2048' && board2048.length === 0) {
+      init2048();
+    }
+  }, [activeGame]);
+
+  useEffect(() => {
+    if (activeGame !== 'game2048') return;
+    
+    const handleKeyPress = (e) => {
+      if (e.key === 'ArrowLeft') move2048('left');
+      else if (e.key === 'ArrowRight') move2048('right');
+      else if (e.key === 'ArrowUp') move2048('up');
+      else if (e.key === 'ArrowDown') move2048('down');
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [activeGame, board2048, gameOver2048, score2048]);
+
   return (
     <div className="games">
       <div className="games-header">
@@ -638,6 +812,102 @@ function Games() {
                   <div className="puzzle-complete">
                     <h3>🎉 축하합니다!</h3>
                     <p>{puzzleMoves}번 만에 완성!</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeGame === 'tictactoe' && (
+            <div className="tictactoe-game">
+              <div className="game-header">
+                <h2>⭕ 틱택토</h2>
+                <div className="ttt-status">
+                  {tttWinner ? (
+                    tttWinner === 'Draw' ? '무승부!' : `${tttWinner} 승리!`
+                  ) : (
+                    `현재 턴: ${tttIsXNext ? 'X (당신)' : 'O (AI)'}`
+                  )}
+                </div>
+              </div>
+
+              <div className="ttt-container">
+                <div className="ttt-board">
+                  {tttBoard.map((cell, index) => (
+                    <button
+                      key={index}
+                      className={`ttt-cell ${cell ? 'filled' : ''} ${cell === 'X' ? 'x' : cell === 'O' ? 'o' : ''}`}
+                      onClick={() => handleTttClick(index)}
+                      disabled={cell !== null || tttWinner !== null}
+                    >
+                      {cell}
+                    </button>
+                  ))}
+                </div>
+
+                <button className="btn-retry" onClick={resetTtt}>
+                  새 게임
+                </button>
+
+                {tttWinner && (
+                  <div className="ttt-result">
+                    <div className="result-icon">
+                      {tttWinner === 'X' ? '🎉' : tttWinner === 'O' ? '🤖' : '🤝'}
+                    </div>
+                    <h3>
+                      {tttWinner === 'X' ? '축하합니다!' : tttWinner === 'O' ? 'AI 승리!' : '무승부!'}
+                    </h3>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeGame === 'game2048' && (
+            <div className="game2048">
+              <div className="game-header">
+                <h2>🔢 2048</h2>
+                <div className="game2048-score">
+                  <span>점수: {score2048}</span>
+                  {gameOver2048 && <span className="game-over-badge">게임 오버</span>}
+                </div>
+              </div>
+
+              <div className="game2048-container">
+                <div className="game2048-board">
+                  {board2048.map((row, i) => (
+                    <div key={i} className="game2048-row">
+                      {row.map((cell, j) => (
+                        <div
+                          key={`${i}-${j}`}
+                          className={`game2048-cell cell-${cell}`}
+                        >
+                          {cell !== 0 && cell}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="game2048-controls">
+                  <p>⬆️⬇️⬅️➡️ 방향키로 조작하세요</p>
+                  <div className="control-buttons">
+                    <button onClick={() => move2048('up')}>⬆️</button>
+                    <div className="control-row">
+                      <button onClick={() => move2048('left')}>⬅️</button>
+                      <button onClick={() => move2048('down')}>⬇️</button>
+                      <button onClick={() => move2048('right')}>➡️</button>
+                    </div>
+                  </div>
+                  <button className="btn-retry" onClick={init2048}>
+                    새 게임
+                  </button>
+                </div>
+
+                {gameOver2048 && (
+                  <div className="game2048-over">
+                    <h3>게임 오버!</h3>
+                    <p>최종 점수: {score2048}</p>
                   </div>
                 )}
               </div>

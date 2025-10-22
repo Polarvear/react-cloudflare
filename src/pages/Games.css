@@ -748,6 +748,257 @@
   border-left: 3px solid #667eea;
 }
 
+/* Tic-Tac-Toe Game */
+.ttt-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.ttt-status {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.ttt-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: #2c3e50;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.ttt-cell {
+  width: 100px;
+  height: 100px;
+  background: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ttt-cell:not(.filled):hover:not(:disabled) {
+  background: #ecf0f1;
+  transform: scale(1.05);
+}
+
+.ttt-cell:disabled {
+  cursor: not-allowed;
+}
+
+.ttt-cell.x {
+  color: #3498db;
+}
+
+.ttt-cell.o {
+  color: #e74c3c;
+}
+
+.ttt-result {
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 15px;
+}
+
+.ttt-result .result-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.ttt-result h3 {
+  font-size: 2rem;
+  color: #2c3e50;
+}
+
+/* 2048 Game */
+.game2048-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.game2048-score {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.game-over-badge {
+  background: #e74c3c;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 1rem;
+}
+
+.game2048-board {
+  background: #bbada0;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.game2048-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.game2048-row:last-child {
+  margin-bottom: 0;
+}
+
+.game2048-cell {
+  width: 80px;
+  height: 80px;
+  background: #cdc1b4;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #776e65;
+  transition: all 0.15s;
+}
+
+.game2048-cell.cell-2 {
+  background: #eee4da;
+  color: #776e65;
+}
+
+.game2048-cell.cell-4 {
+  background: #ede0c8;
+  color: #776e65;
+}
+
+.game2048-cell.cell-8 {
+  background: #f2b179;
+  color: #f9f6f2;
+}
+
+.game2048-cell.cell-16 {
+  background: #f59563;
+  color: #f9f6f2;
+}
+
+.game2048-cell.cell-32 {
+  background: #f67c5f;
+  color: #f9f6f2;
+}
+
+.game2048-cell.cell-64 {
+  background: #f65e3b;
+  color: #f9f6f2;
+}
+
+.game2048-cell.cell-128 {
+  background: #edcf72;
+  color: #f9f6f2;
+  font-size: 1.8rem;
+}
+
+.game2048-cell.cell-256 {
+  background: #edcc61;
+  color: #f9f6f2;
+  font-size: 1.8rem;
+}
+
+.game2048-cell.cell-512 {
+  background: #edc850;
+  color: #f9f6f2;
+  font-size: 1.8rem;
+}
+
+.game2048-cell.cell-1024 {
+  background: #edc53f;
+  color: #f9f6f2;
+  font-size: 1.5rem;
+}
+
+.game2048-cell.cell-2048 {
+  background: #edc22e;
+  color: #f9f6f2;
+  font-size: 1.5rem;
+  box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.5);
+}
+
+.game2048-controls {
+  text-align: center;
+}
+
+.game2048-controls p {
+  color: #7f8c8d;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.control-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.control-buttons button {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.control-buttons button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.control-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.game2048-over {
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 15px;
+}
+
+.game2048-over h3 {
+  font-size: 2rem;
+  color: #e74c3c;
+  margin-bottom: 0.5rem;
+}
+
+.game2048-over p {
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
 /* Coming Soon */
 .coming-soon {
   text-align: center;
