@@ -21,7 +21,23 @@ function Games() {
   const [wpm, setWpm] = useState(0);
   
   // Snake Game State
-  const [snakeScore] = useState(0);
+  const [snakeScore, setSnakeScore] = useState(0);
+  const [snake, setSnake] = useState([[5, 5]]);
+  const [food, setFood] = useState([10, 10]);
+  const [direction, setDirection] = useState('RIGHT');
+  const [gameOver, setGameOver] = useState(false);
+  const [snakeRunning, setSnakeRunning] = useState(false);
+  
+  // Puzzle Game State
+  const [puzzleBoard, setPuzzleBoard] = useState([]);
+  const [puzzleMoves, setPuzzleMoves] = useState(0);
+  const [puzzleSolved, setPuzzleSolved] = useState(false);
+  
+  // Trivia Game State
+  const [triviaScore, setTriviaScore] = useState(0);
+  const [currentTrivia, setCurrentTrivia] = useState(0);
+  const [triviaAnswers, setTriviaAnswers] = useState([]);
+  const [showTriviaResult, setShowTriviaResult] = useState(false);
 
   const quizQuestions = [
     {
@@ -61,8 +77,41 @@ function Games() {
     { id: 'memory', name: '메모리 게임', icon: '🎴', description: '카드 짝 맞추기' },
     { id: 'typing', name: '타이핑 게임', icon: '⌨️', description: '코드 타이핑 속도' },
     { id: 'snake', name: '스네이크 게임', icon: '🐍', description: '클래식 게임' },
-    { id: 'puzzle', name: '코드 퍼즐', icon: '🧩', description: '곧 출시' },
-    { id: 'trivia', name: '트리비아', icon: '🎯', description: '곧 출시' }
+    { id: 'puzzle', name: '슬라이딩 퍼즐', icon: '🧩', description: '숫자 맞추기' },
+    { id: 'trivia', name: '개발 트리비아', icon: '🎯', description: '상식 퀴즈' }
+  ];
+
+  const triviaQuestions = [
+    {
+      question: '최초의 프로그래밍 언어는?',
+      options: ['Fortran', 'COBOL', 'Assembly', 'Plankalkül'],
+      correct: 3,
+      fact: 'Plankalkül은 1940년대에 Konrad Zuse가 개발한 최초의 고급 프로그래밍 언어입니다.'
+    },
+    {
+      question: 'GitHub의 마스코트 이름은?',
+      options: ['Octocat', 'Gitty', 'Hubby', 'Codecat'],
+      correct: 0,
+      fact: 'Octocat은 GitHub의 공식 마스코트로, 고양이와 문어의 합성어입니다.'
+    },
+    {
+      question: 'JavaScript가 처음 만들어진 기간은?',
+      options: ['1년', '6개월', '3개월', '10일'],
+      correct: 3,
+      fact: 'Brendan Eich는 1995년 단 10일 만에 JavaScript의 첫 버전을 만들었습니다.'
+    },
+    {
+      question: 'Linux의 마스코트는?',
+      options: ['펭귄', '여우', '고양이', '독수리'],
+      correct: 0,
+      fact: 'Tux라는 이름의 펭귄이 Linux의 공식 마스코트입니다.'
+    },
+    {
+      question: 'Stack Overflow는 언제 설립되었나요?',
+      options: ['2006', '2008', '2010', '2012'],
+      correct: 1,
+      fact: 'Stack Overflow는 2008년 Jeff Atwood와 Joel Spolsky에 의해 설립되었습니다.'
+    }
   ];
 
   // Initialize Memory Game
@@ -153,6 +202,172 @@ function Games() {
       'import React from "react";'
     ];
     setTargetText(codes[Math.floor(Math.random() * codes.length)]);
+  };
+
+  // Snake Game Functions
+  const initSnakeGame = () => {
+    setSnake([[5, 5]]);
+    setFood([10, 10]);
+    setDirection('RIGHT');
+    setSnakeScore(0);
+    setGameOver(false);
+    setSnakeRunning(false);
+  };
+
+  const startSnakeGame = () => {
+    if (!snakeRunning && !gameOver) {
+      setSnakeRunning(true);
+    }
+  };
+
+  const generateFood = () => {
+    const x = Math.floor(Math.random() * 20);
+    const y = Math.floor(Math.random() * 20);
+    return [x, y];
+  };
+
+  useEffect(() => {
+    if (!snakeRunning || gameOver) return;
+
+    const moveSnake = () => {
+      setSnake(prevSnake => {
+        const newSnake = [...prevSnake];
+        const head = [...newSnake[0]];
+
+        switch (direction) {
+          case 'UP':
+            head[1] -= 1;
+            break;
+          case 'DOWN':
+            head[1] += 1;
+            break;
+          case 'LEFT':
+            head[0] -= 1;
+            break;
+          case 'RIGHT':
+            head[0] += 1;
+            break;
+          default:
+            break;
+        }
+
+        // Check wall collision
+        if (head[0] < 0 || head[0] >= 20 || head[1] < 0 || head[1] >= 20) {
+          setGameOver(true);
+          setSnakeRunning(false);
+          return prevSnake;
+        }
+
+        // Check self collision
+        if (newSnake.some(segment => segment[0] === head[0] && segment[1] === head[1])) {
+          setGameOver(true);
+          setSnakeRunning(false);
+          return prevSnake;
+        }
+
+        newSnake.unshift(head);
+
+        // Check food collision
+        if (head[0] === food[0] && head[1] === food[1]) {
+          setSnakeScore(prev => prev + 10);
+          setFood(generateFood());
+        } else {
+          newSnake.pop();
+        }
+
+        return newSnake;
+      });
+    };
+
+    const gameInterval = setInterval(moveSnake, 150);
+    return () => clearInterval(gameInterval);
+  }, [snakeRunning, direction, food, gameOver]);
+
+  useEffect(() => {
+    if (!snakeRunning) return;
+
+    const handleKeyPress = (e) => {
+      switch (e.key) {
+        case 'ArrowUp':
+          if (direction !== 'DOWN') setDirection('UP');
+          break;
+        case 'ArrowDown':
+          if (direction !== 'UP') setDirection('DOWN');
+          break;
+        case 'ArrowLeft':
+          if (direction !== 'RIGHT') setDirection('LEFT');
+          break;
+        case 'ArrowRight':
+          if (direction !== 'LEFT') setDirection('RIGHT');
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [snakeRunning, direction]);
+
+  // Puzzle Game Functions
+  const initPuzzle = () => {
+    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 0];
+    const shuffled = [...numbers].sort(() => Math.random() - 0.5);
+    setPuzzleBoard(shuffled);
+    setPuzzleMoves(0);
+    setPuzzleSolved(false);
+  };
+
+  const movePuzzleTile = (index) => {
+    const emptyIndex = puzzleBoard.indexOf(0);
+    const validMoves = [
+      emptyIndex - 3, // above
+      emptyIndex + 3, // below
+      emptyIndex % 3 !== 0 ? emptyIndex - 1 : -1, // left
+      emptyIndex % 3 !== 2 ? emptyIndex + 1 : -1  // right
+    ];
+
+    if (validMoves.includes(index)) {
+      const newBoard = [...puzzleBoard];
+      [newBoard[emptyIndex], newBoard[index]] = [newBoard[index], newBoard[emptyIndex]];
+      setPuzzleBoard(newBoard);
+      setPuzzleMoves(puzzleMoves + 1);
+
+      // Check if solved
+      const isSolved = newBoard.every((num, idx) => num === (idx === 8 ? 0 : idx + 1));
+      if (isSolved) {
+        setPuzzleSolved(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (activeGame === 'puzzle' && puzzleBoard.length === 0) {
+      initPuzzle();
+    }
+  }, [activeGame]);
+
+  // Trivia Game Functions
+  const handleTriviaAnswer = (selectedIndex) => {
+    const newAnswers = [...triviaAnswers, selectedIndex];
+    setTriviaAnswers(newAnswers);
+
+    if (selectedIndex === triviaQuestions[currentTrivia].correct) {
+      setTriviaScore(triviaScore + 1);
+    }
+
+    if (currentTrivia < triviaQuestions.length - 1) {
+      setCurrentTrivia(currentTrivia + 1);
+    } else {
+      setShowTriviaResult(true);
+    }
+  };
+
+  const resetTrivia = () => {
+    setCurrentTrivia(0);
+    setTriviaScore(0);
+    setShowTriviaResult(false);
+    setTriviaAnswers([]);
   };
 
   return (
@@ -344,19 +559,146 @@ function Games() {
                 <h2>🐍 스네이크 게임</h2>
                 <div className="snake-score">점수: {snakeScore}</div>
               </div>
-              <div className="coming-soon">
-                <div className="coming-icon">🚧</div>
-                <h3>곧 출시됩니다!</h3>
-                <p>클래식 스네이크 게임을 준비 중입니다.</p>
+              
+              <div className="snake-container">
+                <div className="snake-board">
+                  {Array.from({ length: 20 }).map((_, y) => (
+                    <div key={y} className="snake-row">
+                      {Array.from({ length: 20 }).map((_, x) => {
+                        const isSnake = snake.some(segment => segment[0] === x && segment[1] === y);
+                        const isHead = snake[0] && snake[0][0] === x && snake[0][1] === y;
+                        const isFood = food[0] === x && food[1] === y;
+                        
+                        return (
+                          <div
+                            key={x}
+                            className={`snake-cell ${isSnake ? 'snake' : ''} ${isHead ? 'head' : ''} ${isFood ? 'food' : ''}`}
+                          />
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="snake-controls">
+                  {!snakeRunning && !gameOver && (
+                    <button className="btn-start" onClick={startSnakeGame}>
+                      게임 시작 🎮
+                    </button>
+                  )}
+                  {snakeRunning && (
+                    <div className="game-info">
+                      <p>⬆️⬇️⬅️➡️ 방향키로 조작하세요</p>
+                      <p>길이: {snake.length}</p>
+                    </div>
+                  )}
+                  {gameOver && (
+                    <div className="game-over">
+                      <h3>게임 오버! 💀</h3>
+                      <p>최종 점수: {snakeScore}</p>
+                      <p>길이: {snake.length}</p>
+                      <button className="btn-retry" onClick={initSnakeGame}>
+                        다시 시작
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
 
-          {(activeGame === 'puzzle' || activeGame === 'trivia') && (
-            <div className="coming-soon">
-              <div className="coming-icon">🚧</div>
-              <h3>곧 출시됩니다!</h3>
-              <p>새로운 게임을 준비 중입니다.</p>
+          {activeGame === 'puzzle' && (
+            <div className="puzzle-game">
+              <div className="game-header">
+                <h2>🧩 슬라이딩 퍼즐</h2>
+                <div className="puzzle-info">
+                  <span>이동: {puzzleMoves}</span>
+                  {puzzleSolved && <span className="solved-badge">✅ 완료!</span>}
+                </div>
+              </div>
+
+              <div className="puzzle-container">
+                <div className="puzzle-board">
+                  {puzzleBoard.map((num, index) => (
+                    <div
+                      key={index}
+                      className={`puzzle-tile ${num === 0 ? 'empty' : ''} ${puzzleSolved ? 'solved' : ''}`}
+                      onClick={() => !puzzleSolved && movePuzzleTile(index)}
+                    >
+                      {num !== 0 && num}
+                    </div>
+                  ))}
+                </div>
+
+                <button className="btn-retry" onClick={initPuzzle}>
+                  새 게임 시작
+                </button>
+
+                {puzzleSolved && (
+                  <div className="puzzle-complete">
+                    <h3>🎉 축하합니다!</h3>
+                    <p>{puzzleMoves}번 만에 완성!</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeGame === 'trivia' && (
+            <div className="trivia-game">
+              <div className="game-header">
+                <h2>🎯 개발 트리비아</h2>
+                <div className="trivia-progress">
+                  질문 {currentTrivia + 1} / {triviaQuestions.length}
+                </div>
+              </div>
+
+              {!showTriviaResult ? (
+                <div className="trivia-container">
+                  <div className="trivia-card">
+                    <h3>{triviaQuestions[currentTrivia].question}</h3>
+                    <div className="trivia-options">
+                      {triviaQuestions[currentTrivia].options.map((option, index) => (
+                        <button
+                          key={index}
+                          className="trivia-option"
+                          onClick={() => handleTriviaAnswer(index)}
+                        >
+                          <span className="option-letter">{String.fromCharCode(65 + index)}</span>
+                          <span className="option-text">{option}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="trivia-result">
+                  <div className="result-icon">
+                    {triviaScore >= 4 ? '🏆' : triviaScore >= 3 ? '🎉' : '📚'}
+                  </div>
+                  <h3>트리비아 완료!</h3>
+                  <div className="result-score">
+                    {triviaScore} / {triviaQuestions.length} 정답
+                  </div>
+                  
+                  <div className="trivia-facts">
+                    <h4>💡 재미있는 사실들</h4>
+                    {triviaQuestions.map((q, idx) => (
+                      <div key={idx} className="fact-item">
+                        <div className="fact-question">{q.question}</div>
+                        <div className={`fact-answer ${triviaAnswers[idx] === q.correct ? 'correct' : 'wrong'}`}>
+                          {triviaAnswers[idx] === q.correct ? '✅' : '❌'} {q.options[q.correct]}
+                        </div>
+                        <div className="fact-text">{q.fact}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button className="btn-retry" onClick={resetTrivia}>
+                    다시 도전하기
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

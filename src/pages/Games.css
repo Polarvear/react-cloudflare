@@ -446,6 +446,308 @@
   font-size: 1.3rem;
 }
 
+/* Snake Game */
+.snake-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.snake-board {
+  display: inline-block;
+  background: #2c3e50;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.snake-row {
+  display: flex;
+}
+
+.snake-cell {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #34495e;
+  background: #ecf0f1;
+}
+
+.snake-cell.snake {
+  background: #27ae60;
+  border-color: #229954;
+}
+
+.snake-cell.head {
+  background: #2ecc71;
+  border-color: #27ae60;
+  box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+}
+
+.snake-cell.food {
+  background: #e74c3c;
+  border-color: #c0392b;
+  border-radius: 50%;
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(0.9); }
+  to { transform: scale(1.1); }
+}
+
+.snake-controls {
+  text-align: center;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-start {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-start:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+}
+
+.game-info {
+  text-align: center;
+}
+
+.game-info p {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin: 0.5rem 0;
+}
+
+.game-over {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.game-over h3 {
+  font-size: 2rem;
+  color: #e74c3c;
+  margin-bottom: 1rem;
+}
+
+.game-over p {
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin: 0.5rem 0;
+}
+
+/* Puzzle Game */
+.puzzle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.puzzle-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: #2c3e50;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.puzzle-tile {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.puzzle-tile:hover:not(.empty) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+}
+
+.puzzle-tile.empty {
+  background: transparent;
+  cursor: default;
+}
+
+.puzzle-tile.solved {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  animation: celebrate 0.5s ease;
+}
+
+@keyframes celebrate {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.puzzle-info {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.solved-badge {
+  background: #27ae60;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 1rem;
+}
+
+.puzzle-complete {
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 15px;
+}
+
+.puzzle-complete h3 {
+  font-size: 2rem;
+  color: #27ae60;
+  margin-bottom: 0.5rem;
+}
+
+.puzzle-complete p {
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+/* Trivia Game */
+.trivia-container {
+  padding: 2rem;
+}
+
+.trivia-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.trivia-card h3 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.trivia-options {
+  display: grid;
+  gap: 1rem;
+}
+
+.trivia-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border: 3px solid transparent;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+}
+
+.trivia-option:hover {
+  background: #e9ecef;
+  border-color: #667eea;
+  transform: translateX(10px);
+}
+
+.trivia-progress {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.trivia-result {
+  padding: 2rem;
+  text-align: center;
+}
+
+.trivia-facts {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.trivia-facts h4 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.fact-item {
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.fact-question {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.fact-answer {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.fact-answer.correct {
+  color: #27ae60;
+}
+
+.fact-answer.wrong {
+  color: #e74c3c;
+}
+
+.fact-text {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  padding-left: 1.5rem;
+  border-left: 3px solid #667eea;
+}
+
 /* Coming Soon */
 .coming-soon {
   text-align: center;

@@ -11,6 +11,18 @@ function Playground() {
   ]);
   const [colorPicker, setColorPicker] = useState('#667eea');
   const [sliderValue, setSliderValue] = useState(50);
+  const [timerMinutes, setTimerMinutes] = useState(5);
+  const [timerSeconds, setTimerSeconds] = useState(0);
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [timerPaused, setTimerPaused] = useState(false);
+  const [weatherCity, setWeatherCity] = useState('Seoul');
+  const [weatherData, setWeatherData] = useState({
+    temp: 22,
+    condition: '맑음',
+    humidity: 65,
+    wind: 12,
+    feelsLike: 20
+  });
 
   const demos = [
     { id: 'calculator', name: '계산기', icon: '🔢', description: '간단한 계산기 앱' },
@@ -52,6 +64,73 @@ function Playground() {
 
   const deleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  // Timer functions
+  const startTimer = () => {
+    if (timerMinutes === 0 && timerSeconds === 0) return;
+    setTimerRunning(true);
+    setTimerPaused(false);
+  };
+
+  const pauseTimer = () => {
+    setTimerPaused(true);
+  };
+
+  const resumeTimer = () => {
+    setTimerPaused(false);
+  };
+
+  const resetTimer = () => {
+    setTimerRunning(false);
+    setTimerPaused(false);
+    setTimerMinutes(5);
+    setTimerSeconds(0);
+  };
+
+  React.useEffect(() => {
+    let interval = null;
+    if (timerRunning && !timerPaused) {
+      interval = setInterval(() => {
+        if (timerSeconds > 0) {
+          setTimerSeconds(timerSeconds - 1);
+        } else if (timerMinutes > 0) {
+          setTimerMinutes(timerMinutes - 1);
+          setTimerSeconds(59);
+        } else {
+          setTimerRunning(false);
+          alert('⏰ 타이머 종료!');
+        }
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timerRunning, timerPaused, timerMinutes, timerSeconds]);
+
+  // Weather functions
+  const updateWeather = () => {
+    // Simulated weather data based on city
+    const weatherConditions = ['맑음', '흐림', '비', '눈', '안개'];
+    const randomCondition = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
+    const randomTemp = Math.floor(Math.random() * 30) + 5;
+    
+    setWeatherData({
+      temp: randomTemp,
+      condition: randomCondition,
+      humidity: Math.floor(Math.random() * 40) + 40,
+      wind: Math.floor(Math.random() * 20) + 5,
+      feelsLike: randomTemp + Math.floor(Math.random() * 5) - 2
+    });
+  };
+
+  const getWeatherIcon = (condition) => {
+    const icons = {
+      '맑음': '☀️',
+      '흐림': '☁️',
+      '비': '🌧️',
+      '눈': '❄️',
+      '안개': '🌫️'
+    };
+    return icons[condition] || '🌤️';
   };
 
   return (
@@ -307,12 +386,91 @@ const toggleTodo = (id) => {
             <div className="demo-container">
               <div className="demo-header">
                 <h2>⏱️ 카운트다운 타이머</h2>
-                <p>타이머 기능 (개발 중)</p>
+                <p>집중력을 높이는 포모도로 타이머</p>
               </div>
-              <div className="coming-soon">
-                <div className="coming-icon">🚧</div>
-                <h3>곧 출시됩니다!</h3>
-                <p>이 데모는 현재 개발 중입니다.</p>
+              <div className="timer-demo">
+                <div className="timer-display">
+                  <div className="timer-circle">
+                    <div className="timer-time">
+                      {String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(2, '0')}
+                    </div>
+                    <div className="timer-label">
+                      {timerRunning ? (timerPaused ? '일시정지' : '진행중') : '대기중'}
+                    </div>
+                  </div>
+                </div>
+
+                {!timerRunning && (
+                  <div className="timer-presets">
+                    <button onClick={() => { setTimerMinutes(1); setTimerSeconds(0); }} className="preset-btn">1분</button>
+                    <button onClick={() => { setTimerMinutes(5); setTimerSeconds(0); }} className="preset-btn">5분</button>
+                    <button onClick={() => { setTimerMinutes(10); setTimerSeconds(0); }} className="preset-btn">10분</button>
+                    <button onClick={() => { setTimerMinutes(25); setTimerSeconds(0); }} className="preset-btn">25분</button>
+                  </div>
+                )}
+
+                <div className="timer-controls">
+                  {!timerRunning ? (
+                    <button onClick={startTimer} className="btn-timer start">시작</button>
+                  ) : (
+                    <>
+                      {!timerPaused ? (
+                        <button onClick={pauseTimer} className="btn-timer pause">일시정지</button>
+                      ) : (
+                        <button onClick={resumeTimer} className="btn-timer resume">재개</button>
+                      )}
+                      <button onClick={resetTimer} className="btn-timer reset">리셋</button>
+                    </>
+                  )}
+                </div>
+
+                {!timerRunning && (
+                  <div className="timer-custom">
+                    <label>커스텀 시간 설정</label>
+                    <div className="custom-inputs">
+                      <input
+                        type="number"
+                        min="0"
+                        max="59"
+                        value={timerMinutes}
+                        onChange={(e) => setTimerMinutes(Math.max(0, Math.min(59, parseInt(e.target.value) || 0)))}
+                        placeholder="분"
+                      />
+                      <span>:</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max="59"
+                        value={timerSeconds}
+                        onChange={(e) => setTimerSeconds(Math.max(0, Math.min(59, parseInt(e.target.value) || 0)))}
+                        placeholder="초"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="demo-code">
+                <h4>💻 코드 예제</h4>
+                <pre>{`const [minutes, setMinutes] = useState(5);
+const [seconds, setSeconds] = useState(0);
+const [running, setRunning] = useState(false);
+
+useEffect(() => {
+  let interval = null;
+  if (running) {
+    interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      } else if (minutes > 0) {
+        setMinutes(minutes - 1);
+        setSeconds(59);
+      } else {
+        setRunning(false);
+      }
+    }, 1000);
+  }
+  return () => clearInterval(interval);
+}, [running, minutes, seconds]);`}</pre>
               </div>
             </div>
           )}
@@ -321,12 +479,62 @@ const toggleTodo = (id) => {
             <div className="demo-container">
               <div className="demo-header">
                 <h2>🌤️ 날씨 위젯</h2>
-                <p>날씨 정보 표시 (개발 중)</p>
+                <p>실시간 날씨 정보를 확인하세요</p>
               </div>
-              <div className="coming-soon">
-                <div className="coming-icon">🚧</div>
-                <h3>곧 출시됩니다!</h3>
-                <p>이 데모는 현재 개발 중입니다.</p>
+              <div className="weather-demo">
+                <div className="weather-location">
+                  <input
+                    type="text"
+                    value={weatherCity}
+                    onChange={(e) => setWeatherCity(e.target.value)}
+                    placeholder="도시 이름 입력..."
+                  />
+                  <button onClick={updateWeather}>날씨 조회</button>
+                </div>
+
+                <div className="weather-card">
+                  <div className="weather-icon">{getWeatherIcon(weatherData.condition)}</div>
+                  <div className="weather-temp">{weatherData.temp}°C</div>
+                  <div className="weather-desc">{weatherData.condition}</div>
+                  <div className="weather-location-name">📍 {weatherCity}</div>
+
+                  <div className="weather-details">
+                    <div className="weather-detail">
+                      <div className="weather-detail-label">체감온도</div>
+                      <div className="weather-detail-value">{weatherData.feelsLike}°C</div>
+                    </div>
+                    <div className="weather-detail">
+                      <div className="weather-detail-label">습도</div>
+                      <div className="weather-detail-value">{weatherData.humidity}%</div>
+                    </div>
+                    <div className="weather-detail">
+                      <div className="weather-detail-label">풍속</div>
+                      <div className="weather-detail-value">{weatherData.wind} m/s</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="weather-info">
+                  <p>💡 이 데모는 시뮬레이션된 날씨 데이터를 사용합니다.</p>
+                  <p>실제 앱에서는 OpenWeatherMap 같은 API를 사용하세요.</p>
+                </div>
+              </div>
+              <div className="demo-code">
+                <h4>💻 코드 예제</h4>
+                <pre>{`const [weather, setWeather] = useState({});
+
+const fetchWeather = async (city) => {
+  const response = await fetch(
+    \`https://api.openweathermap.org/data/2.5/weather?q=\${city}&appid=YOUR_API_KEY\`
+  );
+  const data = await response.json();
+  setWeather({
+    temp: Math.round(data.main.temp - 273.15),
+    condition: data.weather[0].main,
+    humidity: data.main.humidity,
+    wind: data.wind.speed
+  });
+};`}</pre>
               </div>
             </div>
           )}

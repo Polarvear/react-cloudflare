@@ -136,9 +136,111 @@ function Studio() {
         {activeTab === 'analytics' && (
           <div className="analytics-section">
             <h2>콘텐츠 분석</h2>
-            <div className="analytics-card">
-              <h3>📈 조회수 추이</h3>
-              <div className="chart-placeholder">데이터 시각화 영역</div>
+            
+            <div className="analytics-grid">
+              <div className="analytics-card">
+                <h3>📈 조회수 추이</h3>
+                <div className="chart-container">
+                  <div className="bar-chart">
+                    {[
+                      { label: '월', value: 8500 },
+                      { label: '화', value: 12400 },
+                      { label: '수', value: 9800 },
+                      { label: '목', value: 15200 },
+                      { label: '금', value: 18900 },
+                      { label: '토', value: 22100 },
+                      { label: '일', value: 19600 }
+                    ].map((day, index) => (
+                      <div key={index} className="bar-item">
+                        <div className="bar-wrapper">
+                          <div 
+                            className="bar" 
+                            style={{ height: `${(day.value / 22100) * 100}%` }}
+                            title={`${day.value.toLocaleString()} 조회`}
+                          >
+                            <span className="bar-value">{(day.value / 1000).toFixed(1)}K</span>
+                          </div>
+                        </div>
+                        <div className="bar-label">{day.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="analytics-card">
+                <h3>💬 참여도 분석</h3>
+                <div className="engagement-stats">
+                  <div className="engagement-item">
+                    <div className="engagement-circle" style={{ '--percentage': 75 }}>
+                      <span>75%</span>
+                    </div>
+                    <div className="engagement-label">좋아요율</div>
+                  </div>
+                  <div className="engagement-item">
+                    <div className="engagement-circle" style={{ '--percentage': 62 }}>
+                      <span>62%</span>
+                    </div>
+                    <div className="engagement-label">댓글율</div>
+                  </div>
+                  <div className="engagement-item">
+                    <div className="engagement-circle" style={{ '--percentage': 88 }}>
+                      <span>88%</span>
+                    </div>
+                    <div className="engagement-label">공유율</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="analytics-card">
+                <h3>🎯 인기 콘텐츠</h3>
+                <div className="top-content-list">
+                  {[
+                    { title: 'React Hooks 완벽 가이드', views: 12400, trend: '+15%' },
+                    { title: 'CSS Grid 레이아웃', views: 8900, trend: '+8%' },
+                    { title: 'TypeScript 유틸리티', views: 5600, trend: '+22%' }
+                  ].map((item, index) => (
+                    <div key={index} className="top-content-item">
+                      <div className="rank">#{index + 1}</div>
+                      <div className="content-details">
+                        <div className="content-title">{item.title}</div>
+                        <div className="content-stats">
+                          <span>👁️ {item.views.toLocaleString()}</span>
+                          <span className="trend-up">{item.trend}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="analytics-card">
+                <h3>📊 콘텐츠 유형별 분포</h3>
+                <div className="content-distribution">
+                  {[
+                    { type: '튜토리얼', count: 45, color: '#667eea' },
+                    { type: '비디오', count: 32, color: '#f5576c' },
+                    { type: '코드', count: 28, color: '#4facfe' },
+                    { type: '아티클', count: 19, color: '#f093fb' }
+                  ].map((item, index) => (
+                    <div key={index} className="distribution-item">
+                      <div className="distribution-bar-wrapper">
+                        <div 
+                          className="distribution-bar" 
+                          style={{ 
+                            width: `${(item.count / 45) * 100}%`,
+                            background: item.color 
+                          }}
+                        />
+                      </div>
+                      <div className="distribution-info">
+                        <span className="distribution-type">{item.type}</span>
+                        <span className="distribution-count">{item.count}개</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
