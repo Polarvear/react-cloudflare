@@ -24,6 +24,10 @@ import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Search from './pages/Search';
 import Projects from './pages/Projects';
+import Shop from './pages/Shop';
+import Calendar from './pages/Calendar';
+import Gallery from './pages/Gallery';
+import Team from './pages/Team';
 import './App.css';
 
 function App() {
@@ -54,6 +58,10 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/search" element={<Search />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/team" element={<Team />} />
         </Routes>
         <Footer />
       </div>
